@@ -1,0 +1,26 @@
+{
+    "inputMessageMetadata": {
+        "flowVariables": {
+            "PropositionID": {
+                "connectorName": "#_custom_mule_metadata_type_#",
+                "typeId": "string"
+            },
+            "messageid": {
+                "connectorName": "#_custom_mule_metadata_type_#",
+                "typeId": "string"
+            },
+            "USBOfferDisposition": {
+                "connectorName": "#_custom_mule_metadata_type_#",
+                "typeId": "string"
+            }
+        }
+    },
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "httpXmlRequest"
+        }
+    },
+    "id": "c4356f40-600a-4c1e-97a5-c5654d98d588",
+    "version": "5.2.0.0"
+}

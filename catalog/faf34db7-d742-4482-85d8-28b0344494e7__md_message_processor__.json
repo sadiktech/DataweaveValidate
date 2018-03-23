@@ -1,0 +1,22 @@
+{
+    "inputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "httpXmlRequest"
+        },
+        "flowVariables": {
+            "messageId": {
+                "connectorName": "#_custom_mule_metadata_type_#",
+                "typeId": "messageId"
+            }
+        }
+    },
+    "outputMessageMetadata": {
+        "messagePayload": {
+            "connectorName": "#_custom_mule_metadata_type_#",
+            "typeId": "httpXmlRequest"
+        }
+    },
+    "id": "faf34db7-d742-4482-85d8-28b0344494e7",
+    "version": "5.2.0.0"
+}

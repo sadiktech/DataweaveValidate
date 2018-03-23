@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:context="http://www.springframework.org/schema/context" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-current.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+    <context:property-placeholder location="values.properties"/>
+    <http:listener-config name="HTTP_Listener_Configuration" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+     
+        <configuration doc:name="Configuration">
+		  <expression-language autoResolveVariables="true">
+		    <import class = "org.mule.util.NetworkUtils"/>
+		    <import class="java.lang.System" />
+		    <import class="java.lang.String" />
+		    <import class="java.util.LinkedHashMap" />
+		    <import class="org.mule.util.StringUtils"/>
+		        <global-functions>
+		            def getServerDetails() { 
+					            String ip = NetworkUtils.getLocalHost().getHostAddress();
+					            String name = NetworkUtils.getLocalHost().getHostName();
+					            String osName = System.getProperty("os.name");
+					            String osVersion = System.getProperty("os.version");
+					            String javaVersion = System.getProperty("java.version");
+					            String javaVendor = System.getProperty("java.vendor");
+					            return [ip, name, osName, osVersion, javaVersion, javaVendor];
+		            }
+		            
+		            def customeReplace (searchStr,replaceStr,strToBeReplaced){
+						      if (null !=strToBeReplaced ){
+						                return strToBeReplaced.replaceAll(searchStr,replaceStr) 
+						      } else {
+						                   return strToBeReplaced
+						      }
+						   }
+		        </global-functions>
+		    </expression-language>
+		</configuration>
+		
+		
+
+    <flow name="krithikdataweaveFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/testValue" allowedMethods="GET" doc:name="HTTP"/>
+        <set-variable variableName="USBOfferDisposition" value="#[&quot;asdadad&quot;]" doc:name="USBOfferDisposition"/>
+        <set-variable variableName="PropositionID" value="#[&quot;adasasda&quot;]" doc:name="Variable"/>
+        <set-variable doc:name="messageidVariable" value="#[message.id]" variableName="messageid"/>
+        <dw:transform-message doc:name="Transform Message" metadata:id="c4356f40-600a-4c1e-97a5-c5654d98d588">
+            <dw:input-variable doc:sample="sample_data\string_12.dwl" mimeType="application/java" variableName="PropositionID"/>
+            <dw:input-variable doc:sample="sample_data\string_13.dwl" mimeType="application/java" variableName="USBOfferDisposition"/>
+            <dw:input-variable doc:sample="sample_data\string_14.dwl" mimeType="application/java" variableName="messageid"/>
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/xml
+%namespace ns0 http://schemas.xmlsoap.org/soap/envelope/
+%namespace ns3 urn:nms:propositionRcp
+%namespace ns1 http://soa.usbank.com/USBSOACoreComponentsLibrary_V_3_0
+%namespace ns2 http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd
+%namespace xsi http://www.w3.org/2001/XMLSchema-instance
+%var serverIdent = random * 100000 as :string
+
+---
+{
+	ns0#Envelope: {
+		ns0#Header: {
+			ns1#USBSOAPHeader: {
+				TransactionIdentifier: serverIdent[0..4],
+				MessageIdentifier: flowVars.messageid,
+				MessageDateTime: now as :datetime,
+				MessageSequenceIdentifier: p('MessageSequenceIdentifier') ,
+				RequestorInfo: {
+					ServerIdentifier: getServerDetails()[0],
+					ComponentIdentifier: p('ComponentIdentifier')
+				}
+			},
+			ns2#Security: {
+				ns2#UsernameToken: {
+					ns2#Nonce: p('Nonce'),
+					ns2#Username: p('username'),
+					ns2#Password: p('Password')
+				}
+			}
+		},
+		ns0#Body: {
+			ns3#updatePropositionRcpStatus: {
+				sessiontoken: p('token'),
+				offerDispositionStatus: flowVars.USBOfferDisposition,
+				PropositionID: flowVars.PropositionID
+			}
+		}
+	}
+}]]></dw:set-payload>
+        </dw:transform-message>
+        <logger message="------------------------------#[payload]" level="INFO" doc:name="Logger"/>
+
+        <expression-component doc:name="Expression"><![CDATA[payload  = java.lang.String.valueOf(payload).replaceAll("ns0","s") ;
+payload  = java.lang.String.valueOf(payload).replaceAll("ns2:","") ;
+payload  = java.lang.String.valueOf(payload).replaceAll("ns3:updatePropositionRcpStatus:","updatePropositionRcpStatus") ;
+payload  = java.lang.String.valueOf(payload).replaceAll(":ns3:","") ;
+payload  = java.lang.String.valueOf(payload).replaceAll("ns1","h") ;
+
+
+
+]]></expression-component>
+
+    </flow>
+</mule>

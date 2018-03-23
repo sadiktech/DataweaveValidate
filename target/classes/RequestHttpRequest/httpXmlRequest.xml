@@ -1,0 +1,33 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">  
+  <s:Header>       
+	<h:USBSOAPHeader xmlns:h="http://soa.usbank.com/USBSOACoreComponentsLibrary_V_3_0"
+					 xmlns="http://soa.usbank.com/USBSOACoreComponentsLibrary_V_3_0"
+					 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					 xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+		<TransactionIdentifier>vbvbfghj6765</TransactionIdentifier>
+		<MessageIdentifier>abqawaf23sdaf3f</MessageIdentifier>
+		<MessageDateTime>2016-06-20T09:50:45</MessageDateTime>
+		<MessageSequenceIdentifier>122</MessageSequenceIdentifier>
+		<RequestorInfo>             
+			<ServerIdentifier>localhost</ServerIdentifier>
+			<ComponentIdentifier>Fusion</ComponentIdentifier>
+		</RequestorInfo>  
+	</h:USBSOAPHeader>  
+  
+  <Security xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+		<UsernameToken xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">UI9OGZuGhV2e/hKomf4Ufg==</Nonce>
+			<Username>MuleOSBAppIDDEV</Username>
+			<Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">PvVTDjtY2aWM5ZYt</Password>
+		</UsernameToken>
+  </Security> 
+  </s:Header>
+  
+  <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+		<updatePropositionRcpStatus xmlns="urn:nms:propositionRcp">
+			<sessiontoken>crmOperator/crmOperator</sessiontoken>
+			<offerDispositionStatus>"adfasdfdad"</offerDispositionStatus>
+			<PropositionID>"adfasdfdad"</PropositionID>
+		</updatePropositionRcpStatus>
+  </s:Body>
+  </s:Envelope> 
